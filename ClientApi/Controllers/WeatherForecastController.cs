@@ -29,6 +29,7 @@ namespace ClientApi.Controllers
         [Authorize]
         public IEnumerable<WeatherForecast> Get()
         {
+            var user = User.Claims.ToList();
             var rng = new Random();
             var response = Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

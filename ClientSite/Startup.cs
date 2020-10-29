@@ -44,13 +44,14 @@ namespace ClientSite
             .AddCookie("Cookies")
             .AddOpenIdConnect("oidc", options =>
             {
-                options.Authority = "https://demo.identityserver.io/";
-                options.ClientId = "interactive.confidential.short"; // 75 seconds
+                options.Authority = "https://localhost:5001";
+                options.ClientId = "blazor_client"; // 75 seconds
                 options.ClientSecret = "secret";
                 options.ResponseType = "code";
                 options.SaveTokens = true;
                 options.UsePkce = true;
-                options.Scope.Add("api");
+                options.Scope.Add("api1");
+                options.Scope.Add("idResource1");
 
                 // for API add offline_access scope to get refresh_token
 

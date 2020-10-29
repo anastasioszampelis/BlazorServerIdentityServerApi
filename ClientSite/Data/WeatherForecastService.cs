@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ClientSite.Data
 {
@@ -29,8 +30,12 @@ namespace ClientSite.Data
             "WeatherForecast");
 
             var client = _clientFactory.CreateClient("ApiClient");
-            
+
+            var identityToken = await _httpContextAccessor.HttpContext.GetTokenAsync("id_token");
+            var _identityToken = new JwtSecurityTokenHandler().ReadJwtToken(identityToken);
             var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            var _accessToken = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+
             if (accessToken != null)
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);

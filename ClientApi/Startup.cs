@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ClientApi
 {
@@ -34,11 +35,16 @@ namespace ClientApi
                 })
                .AddJwtBearer("Bearer", options =>
                 {
-                    options.Authority = "https://demo.identityserver.io/";
+                    options.Authority = "https://localhost:5001";
 
                     //options.RequireHttpsMetadata = false;
 
-                    options.Audience = "api";
+                    options.Audience = "api1";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+
                 });
 
             services.AddCors(options =>
