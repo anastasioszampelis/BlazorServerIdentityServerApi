@@ -24,7 +24,7 @@ namespace ClientSite.Data
         }
 
 
-        public async Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
+        public async Task<Tuple<bool, WeatherForecast[], string>> GetForecastAsync(DateTime startDate)
         {
             var request = new HttpRequestMessage(HttpMethod.Get,
             "WeatherForecast");
@@ -47,11 +47,11 @@ namespace ClientSite.Data
             {
                 var responseStream = await response.Content.ReadAsStringAsync();
                 var forecast = JsonConvert.DeserializeObject<WeatherForecast[]>(responseStream);
-                return forecast;
+                return new Tuple<bool, WeatherForecast[], string>(true, forecast, string.Empty);
             }
             else
             {
-                return null;   
+                return new Tuple<bool, WeatherForecast[], string>(false, null, response.ReasonPhrase);
             }
 
         }

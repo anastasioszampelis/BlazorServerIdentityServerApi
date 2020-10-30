@@ -51,7 +51,7 @@ namespace ClientSite.Pages
             {
                 IsPersistent = true,
                 //ExpiresUtc = DateTimeOffset.UtcNow.AddHours(15),
-                ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(30),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30),
                 RedirectUri = Url.Content("~/")
             };
             return Challenge(authProps, "oidc");

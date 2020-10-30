@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClientShared.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,7 @@ namespace ClientApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddAuthentication(options =>
                 {
@@ -75,6 +77,7 @@ namespace ClientApi
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseAuthApiMiddleware();
 
             app.UseEndpoints(endpoints =>
             {

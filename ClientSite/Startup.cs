@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Net.Http.Headers;
+using ClientShared.Middleware;
 
 namespace ClientSite
 {
@@ -111,7 +112,7 @@ namespace ClientSite
 
             app.UseAuthentication(); // add this
             app.UseRouting();
-
+            app.UseAuthClientMiddleware();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();

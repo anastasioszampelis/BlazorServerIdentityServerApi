@@ -8,9 +8,13 @@
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (forecasts == null)
+@if (forecasts == null && DataCouldNotBeFetched == false)
 {
     <p><em>Loading...</em></p>
+}
+else if (forecasts == null && DataCouldNotBeFetched == true)
+{
+    <p><em>@ErrorMessage</em></p>
 }
 else
 {
@@ -39,9 +43,20 @@ else
 
 @code {
     private WeatherForecast[] forecasts;
+    private bool DataCouldNotBeFetched { get; set; } = false;
+    private string ErrorMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        var response = await ForecastService.GetForecastAsync(DateTime.Now);
+        if (response.Item1)
+        {
+            forecasts = response.Item2;
+        }
+        else
+        {
+            ErrorMessage = response.Item3;
+            DataCouldNotBeFetched = true;
+        }
     }
 }
