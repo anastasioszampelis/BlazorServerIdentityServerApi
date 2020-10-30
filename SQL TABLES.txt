@@ -1,0 +1,22 @@
+CREATE DATABASE "BlazorOidc"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Greek_Greece.1253'
+    LC_CTYPE = 'Greek_Greece.1253'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+
+CREATE TABLE public.users
+(
+    "FirstName" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    "LastName" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    "Email" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    "RoleId" integer DEFAULT 1,
+    "Id" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 99999 CACHE 1 ),
+    "Active" boolean NOT NULL DEFAULT true,
+    CONSTRAINT users_pkey PRIMARY KEY ("Id"),
+    CONSTRAINT uc_user_email UNIQUE ("Email")
+)
+

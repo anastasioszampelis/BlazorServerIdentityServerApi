@@ -92,6 +92,7 @@ namespace ClientSite
             // part 2: add these
             services.AddSingleton<BlazorServerAuthStateCache>();
             services.AddScoped<AuthenticationStateProvider, BlazorServerAuthState>();
+            services.AddScoped<IUsersService, UsersService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

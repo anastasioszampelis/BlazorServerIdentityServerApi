@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClientApi.Repositories;
 using ClientShared.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +30,7 @@ namespace ClientApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
+            services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddControllers();
             services.AddAuthentication(options =>
                 {
@@ -77,7 +79,7 @@ namespace ClientApi
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseAuthApiMiddleware();
+           // app.UseAuthApiMiddleware();
 
             app.UseEndpoints(endpoints =>
             {
