@@ -20,10 +20,7 @@ namespace ClientSite.Pages
         public async Task<IActionResult> OnGet()
         {
             System.Diagnostics.Debug.WriteLine($"\n_Host OnGet IsAuth? {User.Identity.IsAuthenticated}");
-            if (User.Claims.Any(d => d.Type == "given_name") && User.Claims.Where(d => d.Type == "given_name").Select(d => d.Value).FirstOrDefault() != "Bob")
-            {
-                await this.OnGetLogout();
-            }else if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 var sid = User.Claims
                     .Where(c => c.Type.Equals("sid"))
@@ -62,7 +59,7 @@ namespace ClientSite.Pages
             System.Diagnostics.Debug.WriteLine("\n_Host OnGetLogout");
             var authProps = new AuthenticationProperties
             {
-                RedirectUri = Url.Content("/")
+                RedirectUri = Url.Content("~/")
             };
             await HttpContext.SignOutAsync("Cookies");
             await HttpContext.SignOutAsync("oidc", authProps);

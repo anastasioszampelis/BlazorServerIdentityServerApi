@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Net.Http.Headers;
 using ClientShared.Middleware;
+using ClientShared.AuthorizationPolicy;
 
 namespace ClientSite
 {
@@ -69,7 +70,24 @@ namespace ClientSite
                     }
                 };
             });
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder("AccessControl")
+                    .RequireAuthenticatedUser()
+                    .AddRequirements(new MinimumPermissionRequirement())
+                    .Build();
+            });
 
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("AccessControl", policy =>
+            //    {
+            //        policy.RequireAuthenticatedUser();
+            //        policy.AddRequirements(new MinimumPermissionRequirement());
+            //    });
+            //});
+            ////injection
+            services.AddScoped<IAuthorizationHandler, MinimumPermissionClientHandler>();
 
             //create an HTTP client for accessing the API
             services.AddHttpClient("ApiClient", client =>
@@ -110,14 +128,14 @@ namespace ClientSite
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            app.UseAuthentication(); // add this
             app.UseRouting();
+            app.UseAuthentication(); // add this
             app.UseAuthClientMiddleware();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapBlazorHub();//.RequireAuthorization("AccessControl");
+                endpoints.MapFallbackToPage("/_Host");//.RequireAuthorization("AccessControl");
             });
         }
     }

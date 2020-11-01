@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,6 +33,16 @@ namespace ClientShared.Middleware
                 if (_accessToken.Claims.Where(d => d.Type == "email").Select(d => d.Value).FirstOrDefault() == "BobSmith@email.com")
                 {
                     _logger.LogInformation("User email authenticated");
+                    if (httpContext.User != null && httpContext.User.Identity.IsAuthenticated)
+                    {
+                        var claims = new List<Claim>()
+                        {
+                            new Claim(ClaimTypes.Role, "Admin")
+                        };
+
+                        var appIdentity = new ClaimsIdentity(claims);
+                        httpContext.User.AddIdentity(appIdentity);
+                    }
                     return _next(httpContext);
                 }
                 else

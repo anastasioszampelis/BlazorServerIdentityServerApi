@@ -22,7 +22,7 @@ namespace ClientApi.Controllers
         }
         // GET: api/<UsersController>
         [HttpGet]
-        //[Authorize]
+        [Authorize (Roles = "Admin")]
         public IActionResult Get()
         {
             var response = _usersRepository.GetUsers();

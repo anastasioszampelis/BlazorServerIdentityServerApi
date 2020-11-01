@@ -4,6 +4,8 @@
 @{ Layout = null; }
 
 @model _HostAuthModel
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authorizationService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,10 +18,16 @@
     <link href="css/site.css" rel="stylesheet" />
 </head>
 <body>
-    @if (User.Identity.IsAuthenticated)
+    @if (User.Identity.IsAuthenticated) //authorizationService.AuthorizeAsync(User, "admin");
     {
+        @*@if (!(await authorizationService.AuthorizeAsync(User, "AccessControl")).Succeeded)
+            {
+                <p>Δεν έχετε δικαιώματα πρόσβασης στην εφαρμογή.</p>
+            }
+            else
+            {*@
         <app>
-            <component type="typeof(App)" render-mode="ServerPrerendered" />
+            <component type="typeof(ClientSite.App)" render-mode="ServerPrerendered" />
         </app>
 
         <div id="blazor-error-ui">
@@ -33,15 +41,14 @@
             <a class="dismiss">🗙</a>
         </div>
 
-        <script src="_framework/blazor.server.js"></script>
+
+        //}
+
     }
     else
     {
-        <h3>You are not logged into this application.</h3>
-
-        <p>
-            <a href="/Login">Login</a>
-        </p>
+        <component type="typeof(ClientSite.Components.Landing)" render-mode="Static" />
     }
+    <script src="_framework/blazor.server.js"></script>
 </body>
 </html>

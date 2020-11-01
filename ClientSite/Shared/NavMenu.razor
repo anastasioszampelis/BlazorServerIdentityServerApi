@@ -1,4 +1,7 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@using ClientShared.Dto.Enums
+@using Microsoft.AspNetCore.Authorization
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">ClientSite</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -17,11 +20,22 @@
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Users
             </NavLink>
         </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
+        @if (UserRole == UserRoleDto.IsAdmin)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="counter">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Admin Counter
+                </NavLink>
+            </li>
+        }
+        @if (UserRole == UserRoleDto.IsUser)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="counter">
+                    <span class="oi oi-plus" aria-hidden="true"></span> User Counter
+                </NavLink>
+            </li>
+        }
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="fetchdata">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
@@ -32,11 +46,25 @@
 
 @code {
     private bool collapseNavMenu = true;
+    private UserRoleDto? UserRole { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+
+        if (user.IsInRole("Admin"))
+        {
+            UserRole = UserRoleDto.IsAdmin;
+        }
+
     }
 }
